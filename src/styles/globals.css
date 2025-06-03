@@ -118,11 +118,11 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         scrollbar-width: none;
+        -ms-overflow-style: none;
         @apply border-border outline-ring/50;
     }
 
     *::-webkit-scrollbar {
-        width: 0;
         display: none;
     }
 

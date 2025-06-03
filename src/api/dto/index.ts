@@ -44,7 +44,8 @@ export interface SchemaResponse {
   schema: {
     table: {
       column_name: string;
-      data_type: string;
+      column_type: string;
+      is_nullable: boolean;
     }[];
   };
   relations: {

@@ -76,7 +76,8 @@ export default function LeftPanel({ problem }: Props) {
 
 interface TableColumn {
   column_name: string;
-  data_type: string;
+  column_type: string;
+  is_nullable: boolean;
 }
 
 export function renderTableSchema(
@@ -96,12 +97,12 @@ export function renderTableSchema(
     return outgoingRelations.some((r) => r.column_name === col.column_name);
   }
 
-  function getColumnType(col: TableColumn) {
+  function getRelationInfo(col: TableColumn) {
     const rel = outgoingRelations.find((r) => r.column_name === col.column_name);
     if (rel) {
-      return `${col.data_type} (${rel.referenced_table_name}.${rel.referenced_column_name})`;
+      return `${rel.referenced_table_name}.${rel.referenced_column_name}`;
     }
-    return col.data_type;
+    return null;
   }
 
   return (
@@ -113,17 +114,43 @@ export function renderTableSchema(
             <TableRow>
               <TableHead>컬럼명</TableHead>
               <TableHead>타입</TableHead>
+              <TableHead>관계</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {columns.map((col) => (
-              <TableRow key={col.column_name}>
-                <TableCell className={cn(isPK(col) && 'font-bold', isFK(col) && 'underline')}>
-                  {col.column_name}
-                </TableCell>
-                <TableCell>{getColumnType(col)}</TableCell>
-              </TableRow>
-            ))}
+            {columns.map((col) => {
+              const relationInfo = getRelationInfo(col);
+
+              return (
+                <TableRow key={col.column_name}>
+                  <TableCell
+                    className={cn(
+                      isPK(col) && 'font-bold text-blue-600',
+                      isFK(col) && 'text-green-600 underline',
+                    )}
+                  >
+                    {col.column_name}
+                    {isPK(col) && <span className="ml-1 text-xs text-blue-500">PK</span>}
+                    {isFK(col) && <span className="ml-1 text-xs text-green-500">FK</span>}
+                  </TableCell>
+                  <TableCell>
+                    <span className={cn(col.is_nullable && 'text-gray-500')}>
+                      {col.column_type}
+                    </span>
+                    {col.is_nullable && (
+                      <span className="ml-2 rounded bg-gray-100 px-1 py-0.5 text-xs text-gray-400">
+                        nullable
+                      </span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {relationInfo && (
+                      <span className="text-sm text-purple-600 italic">→ {relationInfo}</span>
+                    )}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </AccordionContent>
