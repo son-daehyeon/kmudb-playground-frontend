@@ -8,27 +8,30 @@ import {
 } from '@/component/ui/table';
 
 interface SqlTableProps {
-  data?: Record<string, unknown>[];
+  data?: {
+    columns: string[];
+    result: never[][];
+  };
 }
 
 export default function SqlTable({ data }: SqlTableProps) {
-  if (!data || data.length === 0)
+  if (!data || !data.result || data.result.length === 0)
     return (
       <div className="flex h-full items-center justify-center">
         <p className="text-neutral-400">데이터가 없습니다.</p>
       </div>
     );
 
-  const headers = Object.keys(data[0]);
+  const { columns, result } = data;
 
   return (
     <div className="overflow-auto rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow>
-            {headers.map((header) => (
+            {columns.map((header, idx) => (
               <TableHead
-                key={header}
+                key={`${header}-${idx}`}
                 className="bg-neutral-100 px-4 py-2 text-center font-semibold text-neutral-700"
               >
                 {header}
@@ -37,17 +40,17 @@ export default function SqlTable({ data }: SqlTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((row, idx) => (
-            <TableRow key={idx} className="odd:bg-white even:bg-neutral-50 hover:bg-neutral-100">
-              {headers.map((header) => (
+          {result.map((row, rowIdx) => (
+            <TableRow key={rowIdx} className="odd:bg-white even:bg-neutral-50 hover:bg-neutral-100">
+              {row.map((cell, cellIdx) => (
                 <TableCell
-                  key={header}
+                  key={`${rowIdx}-${cellIdx}`}
                   className="max-w-[400px] overflow-hidden px-4 py-2 text-center text-ellipsis text-neutral-600"
                 >
-                  {row[header] === null || row[header] === undefined ? (
+                  {cell === null || cell === undefined ? (
                     <span className="text-neutral-400 italic">NULL</span>
                   ) : (
-                    <span>{row[header] as string}</span>
+                    <span>{String(cell)}</span>
                   )}
                 </TableCell>
               ))}

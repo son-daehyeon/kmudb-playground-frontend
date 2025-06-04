@@ -54,7 +54,7 @@ export default function LeftPanel({ problem }: Props) {
           </div>
           <hr />
           <div className="flex flex-col gap-2">
-            <h2 className="text-lg font-semibold">예시 결과 데이터</h2>
+            <h2 className="text-lg font-semibold">예시 결과 데이터 <span className="text-sm font-normal text-neutral-500">({problem?.example.columns.length}개 컬럼)</span></h2>
             <SqlTable data={problem?.example} />
           </div>
           <hr />

@@ -18,7 +18,8 @@ export interface UserResponse {
 }
 
 export interface QueryResponse {
-  result: Record<string, never>[];
+  columns: string[];
+  result: never[][];
 }
 
 export interface ProblemListResponse {
@@ -33,7 +34,10 @@ export interface ProblemDetailResponse {
   description: string;
   solved: boolean;
   query: string;
-  example: Record<string, never>[];
+  example: {
+    columns: string[];
+    result: never[][];
+  };
 }
 
 export interface SubmitResponse {

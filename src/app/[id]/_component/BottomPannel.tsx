@@ -23,7 +23,7 @@ export default function BottomPannel({ isQueryExecuting, queryError, queryRespon
 
   return (
     <section className="h-full overflow-y-auto p-4">
-      <SqlTable data={queryResponse?.result} />
+      <SqlTable data={queryResponse} />
     </section>
   );
 }
